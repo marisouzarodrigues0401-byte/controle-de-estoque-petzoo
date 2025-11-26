@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Estoque{% endblock %}
+{% block content %}
+<section class="hero settings-hero">
+    <div>
+        <p class="eyebrow">Gestão de insumos</p>
+        <h1>Estoque da cozinha</h1>
+        <p>Mantenha o estoque alinhado com o visual da Petzoo e registre os itens essenciais da operação.</p>
+    </div>
+    <div class="hero-card">
+        <p class="muted">Ações rápidas</p>
+        <a class="btn primary" href="{{ url_for('main.novo_item') }}">➕ Novo item</a>
+    </div>
+</section>
+
+<article class="card table-card">
+    <header class="table-header">
+        <div>
+            <p class="eyebrow">Itens cadastrados</p>
+            <h3>Controle de estoque</h3>
+        </div>
+        <a class="btn ghost" href="{{ url_for('main.novo_item') }}">Adicionar item</a>
+    </header>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Unidade</th>
+                    <th>Estoque atual</th>
+                    <th>Estoque mínimo</th>
+                    <th>Observações</th>
+                    <th class="actions-col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if items %}
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.nome }}</td>
+                            <td>{{ item.categoria or '-' }}</td>
+                            <td>{{ item.unidade or '-' }}</td>
+                            <td>{{ item.estoque_atual }}</td>
+                            <td>{{ item.estoque_minimo }}</td>
+                            <td class="muted">{{ item.observacoes or '-' }}</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="btn ghost small" href="{{ url_for('main.editar_item', item_id=item.id) }}">✏️ Editar</a>
+                                    <form method="post" action="{{ url_for('main.deletar_item', item_id=item.id) }}" onsubmit="return confirm('Deseja remover este item?');">
+                                        <button type="submit" class="btn danger small">🗑️ Apagar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="empty-state">Nenhum item cadastrado ainda.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</article>
+{% endblock %}

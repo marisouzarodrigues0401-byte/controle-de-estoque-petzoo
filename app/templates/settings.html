@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Configurações de Clima{% endblock %}
+{% block content %}
+<section class="settings-hero">
+    <div>
+        <p class="eyebrow">Preferências do painel</p>
+        <h1>Configurações de previsão do tempo</h1>
+        <p>Preencha os campos abaixo para que o sistema consulte automaticamente o OpenWeatherMap e ajuste o consumo previsto de acordo com o clima.</p>
+    </div>
+</section>
+<section class="card">
+    <form method="post" class="form-grid">
+        <div class="form-field">
+            <label for="city">Cidade monitorada</label>
+            <input type="text" name="city" id="city" value="{{ settings.city }}" required>
+            <small>Ex.: Vargem Grande Paulista, SP</small>
+        </div>
+        <div class="form-field">
+            <label for="api_key">API Key (OpenWeatherMap)</label>
+            <input type="text" name="api_key" id="api_key" value="{{ settings.api_key or '' }}" placeholder="Cole sua chave segura">
+        </div>
+        <div class="form-field">
+            <label for="rain_impact_factor">Fator de impacto da chuva (%)</label>
+            <input type="number" name="rain_impact_factor" id="rain_impact_factor" step="0.01" value="{{ settings.rain_impact_factor }}" required>
+            <small>-0,30 equivale a reduzir 30% das pessoas em dias chuvosos.</small>
+        </div>
+        <div class="form-field">
+            <label for="sunny_message">Mensagem para tempo ensolarado</label>
+            <textarea name="sunny_message" id="sunny_message" rows="2">{{ settings.sunny_message }}</textarea>
+        </div>
+        <div class="form-field">
+            <label for="rain_message">Mensagem para dias chuvosos</label>
+            <textarea name="rain_message" id="rain_message" rows="2">{{ settings.rain_message }}</textarea>
+        </div>
+        <div class="form-actions">
+            <button class="btn primary" type="submit">Salvar configurações</button>
+            <a class="btn ghost" href="{{ url_for('main.dashboard') }}">Voltar ao dashboard</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

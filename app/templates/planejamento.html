@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero__content">
+    <h1>Planejamento do dia</h1>
+    <p>
+      Informe o número estimado de pessoas do dua e o consumo médio por pessoa
+      para cada item do estoque. O sistema calcula quanto você precisa comprar.
+    </p>
+
+    <!-- Formulário principal -->
+    <form method="POST" class="card card--form">
+
+      <!-- Cardápio do dia(texto livre) -->
+      <div class="form-group">
+        <label for="cardapio">Cardápio do dia (opcional)</label>
+        <textarea
+          id="cardapio"
+          name="cardapio"
+          rows="3"
+          placeholder="Ex.: Segunda: arroz, feijão, frango...">{{ cardapio or '' }}</textarea>
+      </div>
+
+      <!-- Número de pessoas por dia -->
+      <div class="form-group">
+        <label for="pessoas">Número estimado de pessoas por dia</label>
+        <input
+          type="number"
+          id="pessoas"
+          name="pessoas"
+          min="0"
+          value="{{ pessoas or '' }}"
+          placeholder="Ex.: 250"
+          required
+        />
+      </div>
+
+      <h2>Consumo por pessoa</h2>
+      <p>Preencha quanto, em média, cada pessoa consome de cada item.</p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Unidade</th>
+            <th>Consumo por pessoa (unidade/dia)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.nome }}</td>
+            <td>{{ item.unidade }}</td>
+            <td>
+             <input
+  type="text"
+  name="consumo_{{ item.id }}"
+  value="0,05"
+  placeholder="Ex.: 0,05"
+/>
+
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <button type="submit" class="btn btn-primary">
+        Calcular necessidade de estoque
+      </button>
+    </form>
+  </div>
+</section>
+
+{% if resultados %}
+<section class="results">
+  <h2>Resultado do planejamento</h2>
+  <p>
+    Considerando <strong>{{ pessoas }}</strong> pessoas por dia.
+  </p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Consumo/pessoa</th>
+        <th>Necessário total</th>
+        <th>Estoque atual</th>
+        <th>Comprar</th>
+        <th>Sobrando</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in resultados %}
+      <tr>
+        <td>{{ r.item.nome }}</td>
+        <td>{{ "%.3f"|format(r.por_pessoa) }}</td>
+        <td>{{ "%.2f"|format(r.necessario) }}</td>
+        <td>{{ r.atual }}</td>
+        <td>{{ r.comprar }}</td>
+        <td>{{ r.sobrando }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}
