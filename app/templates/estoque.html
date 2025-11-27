@@ -37,15 +37,35 @@
             <tbody>
                 {% if items %}
                     {% for item in items %}
-                        <tr>
-                            <td>{{ item.nome }}</td>
-                            <td>{{ item.categoria or '-' }}</td>
-                            <td>{{ item.unidade or '-' }}</td>
-                           <td 
-    style="{% if item.estoque_atual < item.estoque_minimo %}color:#ff0000; font-weight: bold;{% endif %}"
->
-    {{ item.estoque_atual }}
-</td>
+                       <tr class="{% if item.estoque_atual < item.estoque_minimo %}low-stock{% endif %}">
+    <td>{{ item.nome }}</td>
+    <td>{{ item.categoria or '-' }}</td>
+    <td>{{ item.unidade or '-' }}</td>
+
+    <td>
+        {% if item.estoque_atual < item.estoque_minimo %}
+            <span style="color: red; font-weight: bold;">
+                {{ item.estoque_atual }}
+            </span>
+        {% else %}
+            {{ item.estoque_atual }}
+        {% endif %}
+    </td>
+
+    <td>{{ item.estoque_minimo }}</td>
+
+    <td class="muted">{{ item.observacoes or '-' }}</td>
+
+    <td>
+        <div class="table-actions">
+            <a class="btn ghost small" href="{{ url_for('main.editar_item', item_id=item.id) }}">✏️ Editar</a>
+            <form method="post" action="{{ url_for('main.deletar_item', item_id=item.id) }}" onsubmit="return confirm('Deseja remover este item?');">
+                <button type="submit" class="btn danger small">🗑️ Apagar</button>
+            </form>
+        </div>
+    </td>
+</tr>
+
 
                            <td class="muted">{{ item.estoque_minimo }}</td>
 
@@ -69,4 +89,10 @@
         </table>
     </div>
 </article>
+<style>
+    .low-stock {
+        background-color: #ffdddd !important;
+    }
+</style>
+
 {% endblock %}
