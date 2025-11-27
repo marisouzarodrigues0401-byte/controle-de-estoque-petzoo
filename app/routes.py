@@ -201,3 +201,30 @@ def planejamento():
         pessoas=pessoas,
         consumos_padrao=consumos_padrao,
     )
+    @main_bp.route("/lista-compras")
+def lista_compras():
+    items = Item.query.order_by(Item.nome).all()
+
+    itens_urgentes = [
+        item for item in items
+        if item.estoque_atual < item.estoque_minimo
+    ]
+
+    itens_urgentes.sort(key=lambda i: (i.estoque_atual - i.estoque_minimo))
+
+    return render_template("lista_compras.html", itens_urgentes=itens_urgentes)
+
+@main_bp.route("/lista-compras")
+def lista_compras():
+    items = Item.query.order_by(Item.nome).all()
+
+    # seleciona só itens abaixo do mínimo
+    itens_urgentes = [
+        item for item in items 
+        if item.estoque_atual < item.estoque_minimo
+    ]
+
+    # ordena colocando os mais críticos no topo
+    itens_urgentes.sort(key=lambda i: (i.estoque_atual - i.estoque_minimo))
+
+    return render_template("lista_compras.html", itens_urgentes=itens_urgentes)
