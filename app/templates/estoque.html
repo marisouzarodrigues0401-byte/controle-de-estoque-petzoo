@@ -41,8 +41,14 @@
                             <td>{{ item.nome }}</td>
                             <td>{{ item.categoria or '-' }}</td>
                             <td>{{ item.unidade or '-' }}</td>
-                            <td>{{ item.estoque_atual }}</td>
-                            <td>{{ item.estoque_minimo }}</td>
+                           <td 
+    style="{% if item.estoque_atual < item.estoque_minimo %}color:#ff0000; font-weight: bold;{% endif %}"
+>
+    {{ item.estoque_atual }}
+</td>
+
+                           <td class="muted">{{ item.estoque_minimo }}</td>
+
                             <td class="muted">{{ item.observacoes or '-' }}</td>
                             <td>
                                 <div class="table-actions">
