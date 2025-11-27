@@ -57,7 +57,11 @@ def configuracoes():
 @main_bp.route("/estoque")
 def estoque():
     items = Item.query.order_by(Item.nome).all()
-    return render_template("estoque.html", items=items)
+
+    # cria lista de itens com estoque baixo
+    itens_baixos = [item for item in items if item.estoque_atual < item.estoque_minimo]
+
+    return render_template("estoque.html", items=items, itens_baixos=itens_baixos)
 
 
 @main_bp.route("/estoque/novo", methods=["GET", "POST"])
