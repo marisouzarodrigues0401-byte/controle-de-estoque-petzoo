@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Compras{% endblock %}
+
+{% block content %}
+<section class="hero settings-hero">
+    <div>
+        <p class="eyebrow">Estoque</p>
+        <h1>Lista automática de compras</h1>
+        <p>Itens abaixo do estoque mínimo aparecem aqui automaticamente.</p>
+    </div>
+</section>
+
+<article class="card table-card">
+    <header class="table-header">
+        <div>
+            <p class="eyebrow">Itens urgentes</p>
+            <h3>Comprar hoje</h3>
+        </div>
+    </header>
+
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Atual</th>
+                    <th>Mínimo</th>
+                    <th>Falta</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% if itens_urgentes %}
+                    {% for item in itens_urgentes %}
+                        <tr style="color: #d60000; font-weight: bold;">
+                            <td>{{ item.nome }}</td>
+                            <td>{{ item.estoque_atual }}</td>
+                            <td>{{ item.estoque_minimo }}</td>
+                            <td>{{ item.estoque_minimo - item.estoque_atual }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="empty-state">
+                            🎉 Tudo em ordem! Nenhum item urgente para comprar.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</article>
+{% endblock %}
