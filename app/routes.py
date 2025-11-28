@@ -17,6 +17,32 @@ CONSUMO_PADRAO = {
 
 
 main_bp = Blueprint("main", __name__)
+from flask_mail import Message
+from app import mail
+
+@main_bp.route("/enviar-lista-email")
+def enviar_lista_email():
+    items = Item.query.order_by(Item.nome).all()
+    itens_urgentes = [i for i in items if i.estoque_atual < i.estoque_minimo]
+
+    if not itens_urgentes:
+        texto = "Nenhum item precisa ser comprado hoje! ✔️"
+    else:
+        texto = "Itens que precisam ser comprados:\n\n"
+        for item in itens_urgentes:
+            falta = item.estoque_minimo - item.estoque_atual
+            texto += f"- {item.nome} (falta {falta})\n"
+
+    msg = Message(
+        subject="Lista automática de compras - Petzoo",
+        sender="SEU_EMAIL@gmail.com",
+        recipients=["EMAIL_QUE_VAI_RECEBER@gmail.com"],
+        body=texto
+    )
+
+    mail.send(msg)
+
+    return "Email enviado!"
 
 
 @main_bp.route("/")
